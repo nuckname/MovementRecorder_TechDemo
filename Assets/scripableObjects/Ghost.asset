@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Ghost
   m_EditorClassIdentifier: 
   isRecord: 0
-  isReplay: 1
+  isReplay: 0
   recordFrequency: 70
   timeStamp:
   - 1.629635
