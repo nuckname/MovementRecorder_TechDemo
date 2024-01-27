@@ -27,6 +27,11 @@ public class GhostPlayRecording : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        gameObject.SetActive(false);    
+    }
+
     void Update()
     {
         timeValue += Time.unscaledDeltaTime;

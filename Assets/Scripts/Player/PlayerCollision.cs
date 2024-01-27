@@ -19,13 +19,12 @@ public class PlayerCollision : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("FinishBox"))
         {
-            print("looped");
 
             STATIC_INDEX_COUNTER_FOR_PLAYER_SPAWNS += 1;
 
-            print("INDEX COUNT: " + STATIC_INDEX_COUNTER_FOR_PLAYER_SPAWNS);
-
             replayController.ScriptableObjectReplayer();
+
+            print(gameObject.name);
 
             this.gameObject.transform.position = spawnPoint.position;
         }
