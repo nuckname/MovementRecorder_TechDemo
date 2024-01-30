@@ -346,7 +346,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 594793410}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10.33, y: 4.26, z: -8.64}
+  m_LocalPosition: {x: 30.07, y: 4.26, z: -8.64}
   m_LocalScale: {x: 2.038762, y: 2.038762, z: 2.038762}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -360,12 +360,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 594793410}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 05d2353496a68dc4fabf0c91622caac3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ghost: {fileID: 11400000, guid: c18776b4969fa7444b14a2e2dea558ca, type: 2}
+  ghost: {fileID: 11400000, guid: 929e292f3516f81419687902f3b52943, type: 2}
 --- !u!54 &594793417
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -583,6 +583,7 @@ GameObject:
   m_Component:
   - component: {fileID: 820568396}
   - component: {fileID: 820568395}
+  - component: {fileID: 820568397}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -616,6 +617,7 @@ MonoBehaviour:
   player3: {fileID: 3369124906462934649, guid: 7a28b8ed917afaa4ca76aa633ec75d06, type: 3}
   player4: {fileID: 3535492920622426577, guid: 0eee68b30ff254a4ab54887f9079a7c2, type: 3}
   player5: {fileID: 6263583463387525011, guid: 1360a62943693224b8112909fbd38ca0, type: 3}
+  namingIndex: 0
 --- !u!4 &820568396
 Transform:
   m_ObjectHideFlags: 0
@@ -631,6 +633,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &820568397
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 820568394}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 360241b5425413745b099b4b9ca74a13, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  replayController: {fileID: 0}
 --- !u!1 &832416444
 GameObject:
   m_ObjectHideFlags: 0
@@ -689,12 +704,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1046092273}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 05d2353496a68dc4fabf0c91622caac3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ghost: {fileID: 11400000, guid: c18776b4969fa7444b14a2e2dea558ca, type: 2}
+  ghost: {fileID: 11400000, guid: 929e292f3516f81419687902f3b52943, type: 2}
 --- !u!65 &1046092276
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -883,7 +898,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4304695531427014696, guid: 679bb948ee16a554c8ab9b3f343a782f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 26.02
+      value: 21.31
       objectReference: {fileID: 0}
     - target: {fileID: 4304695531427014696, guid: 679bb948ee16a554c8ab9b3f343a782f, type: 3}
       propertyPath: m_LocalPosition.y
@@ -925,6 +940,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 4304695531427014738, guid: 679bb948ee16a554c8ab9b3f343a782f, type: 3}
+      propertyPath: ghost
+      value: 
+      objectReference: {fileID: 11400000, guid: 929e292f3516f81419687902f3b52943, type: 2}
     - target: {fileID: 4304695531427014738, guid: 679bb948ee16a554c8ab9b3f343a782f, type: 3}
       propertyPath: m_Enabled
       value: 1

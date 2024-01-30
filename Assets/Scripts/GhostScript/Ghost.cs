@@ -2,16 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu]
-public class Ghost : ScriptableObject
+public class GhostData 
 {
-    public bool isRecord;
-    public bool isReplay;
-    public float recordFrequency;
+    public List<float> timeStamp = new List<float>();
+    public List<Vector3> position = new List<Vector3>();
+    public List<Quaternion> rotation = new List<Quaternion>();
 
+    /*
     public List<float> timeStamp;
     public List<Vector3> position;
     public List<Quaternion> rotation;
+    */
 
     public void ResetData()
     {

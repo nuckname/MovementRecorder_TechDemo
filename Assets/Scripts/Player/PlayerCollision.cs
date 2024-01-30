@@ -6,28 +6,19 @@ public class PlayerCollision : MonoBehaviour
 {
     public static int STATIC_INDEX_COUNTER_FOR_PLAYER_SPAWNS;
 
-    [SerializeField]
-    private Transform spawnPoint;
 
-    private ReplayController replayController;
+    private GameManager gameManager;
     private void Awake()
     {
-        replayController = FindObjectOfType<ReplayController>();   
+        gameManager = FindObjectOfType<GameManager>();   
     }
 
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("FinishBox"))
         {
-
-            STATIC_INDEX_COUNTER_FOR_PLAYER_SPAWNS += 1;
-
-            replayController.ScriptableObjectReplayer();
-
-            print(gameObject.name);
-
-            this.gameObject.transform.position = spawnPoint.position;
+            gameManager.SpawningPlayer(gameObject);
+            gameManager.SpawningClones();
         }
     }
-
 }

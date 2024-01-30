@@ -4,74 +4,110 @@ using UnityEngine;
 
 public class GhostPlayRecording : MonoBehaviour
 {
-    public Ghost ghost;
+    public GhostData ghostData;
     private float timeValue;
 
     //linear interpolation variables
     private int index1;
     private int index2;
 
+    bool isReplay;
+
+    /*
+    [SerializeField]
+    private List<float> newestTimeStamp = new List<float>();
+
+    [SerializeField]
+    private List<Vector3> newestPosition = new List<Vector3>();
+
+    [SerializeField]
+    private List<Quaternion> newestRotation = new List<Quaternion>();
+    */
+
+    [SerializeField]
+    private List<float> newestTimeStamp;
+
+    [SerializeField]
+    private List<Vector3> newestPosition;
+
+    [SerializeField]
+    private List<Quaternion> newestRotation;
+    [SerializeField]
+
+    private GhostRecorder ghostRecorder;
+
     private void Awake()
     {
-        timeValue = 0;
+        GameObject ghostRecorderObject = GameObject.FindWithTag("Player");
 
-        //just added this.
-        if (ghost.position.Count > 0)
+        ghostRecorder = ghostRecorderObject.GetComponent<GhostRecorder>();
+
+        if (ghostRecorder != null)
         {
-            
-            ghost.isReplay = true;
-
-            //saves the data to another scriptable objects so we can replay multi clones at once.
-            //how to access this?
-            CreateScriptableObject();
+            GhostData _ghostData = ghostRecorder.ghostData;
         }
+
     }
 
     private void Start()
     {
-        gameObject.SetActive(false);    
+        timeValue = 0;
+
+        //just added this.
+        //I wont need this.
+        if (ghostRecorder.ghostData.position.Count > 0)
+        {
+            isReplay = true;
+
+            //this is going to tank the fps.
+            //when it reaches the end save this to a file?
+            //this keeps getting an update position?
+            newestPosition = ghostRecorder.ghostData.position;
+            newestRotation = ghostRecorder.ghostData.rotation;
+            newestTimeStamp = ghostRecorder.ghostData.timeStamp;
+        }
+
     }
 
     void Update()
     {
         timeValue += Time.unscaledDeltaTime;
 
-        if (ghost.isReplay)
+        //I think while loop was cauing crashes.
+        /*
+        while(index1 < ghostRecorder.ghostData.timeStamp.Count - 1)
         {
-            GetIndex();
-            SetTransform();
+            //GetIndex();
+            //SetTransform();
         }
-    }
+        */
 
-    void CreateScriptableObject()
-    {
-        // Create a new instance of your ScriptableObject class
-        Ghost newDataContainer = ScriptableObject.CreateInstance<Ghost>();
-
-        newDataContainer.isReplay = true;
-        newDataContainer.isRecord = false;   
+        GetIndex();
+        SetTransform();
     }
 
     //linear interpolation stuff
+
+    //calling the script too many times im guess which causes the game to crash.
     private void GetIndex()
     {
-        for (int i = 0; i < ghost.timeStamp.Count - 2; i++)
+        for (int i = 0; i < newestPosition.Count - 2; i++)
         {
-            if (ghost.timeStamp[i] == timeValue)
+            if (ghostRecorder.ghostData.timeStamp[i] == timeValue)
             {
                 index1 = i;
                 index2 = i;
                 return;
             }
-            else if (ghost.timeStamp[i] < timeValue & timeValue < ghost.timeStamp[i + 1])
+            else if (newestTimeStamp[i] < timeValue & timeValue < newestTimeStamp[i + 1])
             {
                 index1 = i;
                 index2 = i + 1;
                 return;
             }
         }
-        index1 = ghost.timeStamp.Count - 1;
-        index2 = ghost.timeStamp.Count - 1;
+        index1 = newestTimeStamp.Count - 1;
+        index2 = newestTimeStamp.Count - 1;
     }
 
     //linear interpolation lerp math shit.
@@ -79,16 +115,15 @@ public class GhostPlayRecording : MonoBehaviour
     {
         if (index1 == index2)
         {
-            this.transform.position = ghost.position[index1];
-            this.transform.rotation = ghost.rotation[index1];
+            transform.position = newestPosition[index1];
+            transform.rotation = newestRotation[index1];
         }
         else
         {
-            float interpolationFactor = (timeValue - ghost.timeStamp[index1]) / (ghost.timeStamp[index2] - ghost.timeStamp[index1]);
+            float interpolationFactor = (timeValue - newestTimeStamp[index1]) / (newestTimeStamp[index2] - newestTimeStamp[index1]);
 
-            this.transform.position = Vector3.Lerp(ghost.position[index1], ghost.position[index2], interpolationFactor);
-            //this.transform.eulerAngles = Vector3.Lerp(ghost.rotation[index1], ghost.rotation[index2], interpolationFactor);
-            this.transform.rotation = Quaternion.Slerp(ghost.rotation[index1], ghost.rotation[index2], interpolationFactor);
+            transform.position = Vector3.Lerp(newestPosition[index1], newestPosition[index2], interpolationFactor);
+            transform.rotation = Quaternion.Slerp(newestRotation[index1], newestRotation[index2], interpolationFactor);
         }
     }
 }

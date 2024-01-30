@@ -1,40 +1,74 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 public class GhostRecorder : MonoBehaviour
 {
-    //writes the timestap
+    private int recordFrequency = 70;
+    public GhostData ghostData;
 
-    public Ghost ghost;
     private float timer;
     private float timeValue;
 
+    public bool isRecording;
+
+    private string filePath = "GhostData.dat"; 
+
     private void Awake()
     {
-        if (ghost.isRecord)
-        {
-            ghost.ResetData();
-            timeValue = 0;
-            timer = 0;
-        }
-
+        timeValue = 0;
+        timer = 0;
     }
 
-    void Update()
+    private void Start()
     {
-        
+        isRecording = true;
+        timeValue = 0;
+        timer = 0;
+        //creating them in gamemanager?
+        //save this to a gameManager or another script which saves all data? -> big data.
+        CreateNewGhost();
+    }
+
+    void CreateNewGhost()
+    {
+        ghostData = new GhostData();
+        ghostData.ResetData();
+    }
+
+    void FixedUpdate()
+    {
         timer += Time.unscaledDeltaTime;
         timeValue += Time.unscaledDeltaTime;
 
-        if (ghost.isRecord & timer >= 1 / ghost.recordFrequency)
+        if (isRecording && timer >= 1f / recordFrequency)
         {
-            ghost.timeStamp.Add(timeValue);
-            ghost.position.Add(this.transform.position);
-            ghost.rotation.Add(this.transform.rotation);
-
+            ghostData.timeStamp.Add(timeValue);
+            ghostData.position.Add(transform.position);
+            ghostData.rotation.Add(transform.rotation);
             timer = 0;
         }
-        
+    }
+
+    public GhostData GetGhostData()
+    {
+        //maybe move somewhere else
+        //WriteGhostDataToBinary();
+
+        return ghostData;
+    }
+
+    //call this in game manager which is called when play hit the blocks.
+    //Order would matter.
+    public void WriteGhostDataToBinary()
+    {
+        using (FileStream fileStream = new FileStream(filePath, FileMode.Create))
+        {
+            BinaryFormatter formatter = new BinaryFormatter();
+            formatter.Serialize(fileStream, ghostData);
+        }
+        Debug.Log("Ghost data has been written to binary file: " + filePath);
     }
 }
