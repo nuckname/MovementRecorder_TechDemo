@@ -8,11 +8,12 @@ public class GhostData
     public List<Vector3> position = new List<Vector3>();
     public List<Quaternion> rotation = new List<Quaternion>();
 
-    /*
-    public List<float> timeStamp;
-    public List<Vector3> position;
-    public List<Quaternion> rotation;
-    */
+    public GhostData(List<float> _timeStamp, List<Vector3> _position, List<Quaternion> _rotation)
+    {
+        timeStamp = new List<float>(_timeStamp);
+        position = new List<Vector3>(_position);
+        rotation = new List<Quaternion>(_rotation);
+    }
 
     public void ResetData()
     {

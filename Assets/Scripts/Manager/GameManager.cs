@@ -16,15 +16,12 @@ public class GameManager : MonoBehaviour
     public GhostData ghostData;
 
     private GhostRecorder ghostRecorder;
+
+    //List<List<GhostData>> allGhostDataPositions = new List<List<GhostData>>();
+    List<GhostData> allGhostDataPositions = new List<GhostData>();
     private void Awake()
     {
         ghostRecorder = FindObjectOfType<GhostRecorder>();
-    }
-    void CreateNewGhost()
-    {
-        
-        ghostData = new GhostData();
-        ghostData.ResetData();
     }
 
     private void Start()
@@ -44,7 +41,14 @@ public class GameManager : MonoBehaviour
 
     public void SpawningClones()
     {
-        CreateNewGhost();
+        ghostRecorder = FindObjectOfType<GhostRecorder>();
+
+        //this is fucked.
+        //allGhostDataPositions.Add(ghostRecorder.GetGhostData());
+
+        //this is giving errors.
+        //ghostRecorder.CreateNewGhost();
+               
         Instantiate(ghost, spawnPoint.position, Quaternion.identity);
     }
 }
