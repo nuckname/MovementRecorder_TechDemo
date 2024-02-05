@@ -9,13 +9,14 @@ public class GhostPlayRecording : MonoBehaviour
     private float timeValue;
 
     //linear interpolation variables
-    //they are set to one so they dont go into a negatibe numebr on the frst loop.
-    private int index1 = 3;
-    private int index2 = 3;
+    private int index1;
+    private int index2;
 
     bool isReplay;
 
-    
+    [SerializeField]
+    private int newestGhostIndex;
+
     [SerializeField]
     private List<float> newestTimeStamp = new List<float>();
 
@@ -24,18 +25,6 @@ public class GhostPlayRecording : MonoBehaviour
 
     [SerializeField]
     private List<Quaternion> newestRotation = new List<Quaternion>();
-    
-
-    /*
-    [SerializeField]
-    private List<float> newestTimeStamp;
-
-    [SerializeField]
-    private List<Vector3> newestPosition;
-
-    [SerializeField]
-    private List<Quaternion> newestRotation;
-    */
 
     [SerializeField]
     private GhostRecorder ghostRecorder;
@@ -53,20 +42,19 @@ public class GhostPlayRecording : MonoBehaviour
     {
         timeValue = 0;
         isReplay = true;
+        
+        GhostData originalGhostData = ghostRecorder.GetGhostData();
 
-        /*
-        newestPosition = ghostRecorder.newGhost.position;
-        newestRotation = ghostRecorder.newGhost.rotation;
-        newestTimeStamp = ghostRecorder.newGhost.timeStamp;
-        */
+        ghostData = new GhostData(originalGhostData.gameObjectGhost, originalGhostData.ghostIndex, originalGhostData.timeStamp, originalGhostData.position, originalGhostData.rotation);
 
-        //may cause performance issue?
 
-        ghostData = ghostRecorder.GetGhostData();
+        newestGhostIndex = ghostData.ghostIndex + 1;
+        print(ghostData.ghostIndex);
 
-        newestPosition = ghostData.position;
-        newestRotation = ghostData.rotation;
-        newestTimeStamp = ghostData.timeStamp;
+        newestPosition = new List<Vector3>(ghostData.position);
+        newestRotation = new List<Quaternion>(ghostData.rotation);
+        newestTimeStamp = new List<float>(ghostData.timeStamp);
+
 
     }
 
@@ -74,67 +62,23 @@ public class GhostPlayRecording : MonoBehaviour
     void Update()
     {
         timeValue += Time.unscaledDeltaTime;
-        if(newestTimeStamp != null)
-        {
-            GetIndex();
-            SetTransform();
-        }
-        else
-        {
-            print("newestTimeStamp is null");
-        }
 
+        GetIndex();
+        SetTransform();
     }
 
     //linear interpolation stuff
-    
     private void GetIndex()
     {
-        // Check if the lists are not null and if they have elements
-        if (newestTimeStamp != null && newestTimeStamp.Count > 0)
+        for (int i = 0; i < newestTimeStamp.Count - 1; i++)
         {
-            for (int i = 0; i < newestTimeStamp.Count - 1; i++)
-            {
-                if (Mathf.Approximately(newestTimeStamp[i], timeValue))
-                {
-                    index1 = i;
-                    index2 = i;
-                    return;
-                }
-                else if (newestTimeStamp[i] < timeValue && timeValue < newestTimeStamp[i + 1])
-                {
-                    index1 = i;
-                    index2 = i + 1;
-                    return;
-                }
-            }
-
-            // If no suitable indices are found, set both indices to the last element
-            index1 = newestTimeStamp.Count - 1;
-            index2 = newestTimeStamp.Count - 1;
-        }
-        else
-        {
-            // Handle the case where the lists are null or empty
-            Debug.LogError("newestTimeStamp list is null or empty.");
-            // You can also throw an exception or handle this case based on your application's requirements
-        }
-    }
-    
-
-    /*
-    private void GetIndex()
-    {
-        for (int i = 0; i < newestPosition.Count - 1; i++)
-        {
-            //if (ghostRecorder.newGhost.timeStamp[i] == timeValue)
-            if (newestTimeStamp[i] == timeValue)
+            if (Mathf.Approximately(newestTimeStamp[i], timeValue))
             {
                 index1 = i;
                 index2 = i;
                 return;
             }
-            else if (newestTimeStamp[i] < timeValue & timeValue < newestTimeStamp[i + 1])
+            else if (newestTimeStamp[i] < timeValue && timeValue < newestTimeStamp[i + 1])
             {
                 index1 = i;
                 index2 = i + 1;
@@ -146,8 +90,6 @@ public class GhostPlayRecording : MonoBehaviour
         index2 = newestTimeStamp.Count - 1;
         
     }
-    */
-
 
     //linear interpolation lerp math shit.
     private void SetTransform()

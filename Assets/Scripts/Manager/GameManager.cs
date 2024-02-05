@@ -13,42 +13,75 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private GameObject player;
 
-    public GhostData ghostData;
-
     private GhostRecorder ghostRecorder;
 
-    //List<List<GhostData>> allGhostDataPositions = new List<List<GhostData>>();
-    List<GhostData> allGhostDataPositions = new List<GhostData>();
-    private void Awake()
-    {
-        ghostRecorder = FindObjectOfType<GhostRecorder>();
-    }
-
+    [SerializeField]
+    private List<GhostData> PreviousGhostRecordings = new List<GhostData>();
     private void Start()
     {
-       //this would be ideal however idk how it would work.
-        // CreateNewGhost();
-
-        //also need to change the camera rotation.
+        //Note: also need to change the camera rotation.
         Instantiate(player, spawnPoint.position, Quaternion.identity);
     }
     public void SpawningPlayer(GameObject player)
     {
-        //spawnPoint.transform.position = player.transform.position;
-
         player.transform.position = spawnPoint.transform.position;
     }
 
     public void SpawningClones()
     {
+        ReplayAllOldGhostMovement();
+
         ghostRecorder = FindObjectOfType<GhostRecorder>();
-
-        //this is fucked.
-        //allGhostDataPositions.Add(ghostRecorder.GetGhostData());
-
-        //this is giving errors.
-        //ghostRecorder.CreateNewGhost();
-               
         Instantiate(ghost, spawnPoint.position, Quaternion.identity);
+        
+        StartCoroutine(DelayedCreation());
+    }
+    
+    // Fixes bug. Waits for a short delay before creating a new ghost recorder so it doesnt replace new ghost data.
+    private IEnumerator DelayedCreation()
+    {
+        yield return new WaitForSeconds(0.01f);
+
+        //bad for performances.
+        PreviousGhostRecordings.Add(ghostRecorder.GetGhostData());
+
+        //giving an error
+        //ghostRecorder.WriteGhostDataToBinary();
+
+        ghostRecorder.CreateNewGhost();
+    }
+
+
+    /// <summary>
+    ///FROM GAME MANAGER CALL GHOST PLAYER SCRIPT AND PASS IN DATA TO REPLAY GHOST.
+    ///LIIKE GAME OBJECT AND POS AND STUFF.
+    /// </summary>
+
+    //this should be in another script. however performance :/
+    private void ReplayAllOldGhostMovement()
+    {
+        foreach (GhostData ghostData in PreviousGhostRecordings)
+        {
+            Debug.Log("Ghost Index:" + ghostData.ghostIndex);
+
+            for (int i = 0; i < ghostData.timeStamp.Count; i++)
+            {
+                Debug.Log("Time Stamp index:" + ghostData.ghostIndex + ": " + ghostData.timeStamp[i]);
+                //ghostData.gameObjectGhost.transform.position = ghostData.timeStamp[i];
+
+                //I should call GhostPlayRecordings.cs
+            }
+
+            for (int i = 0; i < ghostData.position.Count; i++)
+            {
+                Debug.Log("Position index:" + ghostData.ghostIndex + ": " + ghostData.position[i]);
+            }
+
+            for (int i = 0; i < ghostData.rotation.Count; i++)
+            {
+                Debug.Log("Rotation index:" + ghostData.ghostIndex + ": " + ghostData.rotation[i]);
+            }
+        }
+       
     }
 }

@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 
 public class GhostRecorder : MonoBehaviour
 {
@@ -14,17 +13,12 @@ public class GhostRecorder : MonoBehaviour
 
     public bool isRecording;
 
-    private string filePath = "GhostData.dat";
+    int ghostCounter = -1;
 
-    //debug i;
-    int i = 0;
-    GhostData debugGhost;
     private void Awake()
     {
         timeValue = 0;
         timer = 0;
-        
-
 
         CreateNewGhost();
     }
@@ -34,13 +28,13 @@ public class GhostRecorder : MonoBehaviour
         isRecording = true;
         timeValue = 0;
         timer = 0;
-
-        
     }
 
     public void CreateNewGhost()
     {
-        newGhost = new GhostData(new List<float>(), new List<Vector3>(), new List<Quaternion>());
+        ghostCounter += 1;
+
+        newGhost = new GhostData(this.gameObject, ghostCounter, new List<float>(), new List<Vector3>(), new List<Quaternion>());
 
         newGhost.ResetData();
     }
@@ -65,13 +59,5 @@ public class GhostRecorder : MonoBehaviour
         return newGhost;
     }
 
-    public void WriteGhostDataToBinary()
-    {
-        using (FileStream fileStream = new FileStream(filePath, FileMode.Create))
-        {
-            BinaryFormatter formatter = new BinaryFormatter();
-            formatter.Serialize(fileStream, newGhost);
-        }
-        Debug.Log("Ghost data has been written to binary file: " + filePath);
-    }
+
 }
