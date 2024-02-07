@@ -10,10 +10,14 @@ public class PlayerCollision : MonoBehaviour
     private GameManager gameManager;
     private GhostRecorder ghostRecorder;
     private GhostPlayRecording ghostPlayRecording;
+
+    bool ignoreFirstLoop = true;
     private void Awake()
     {
         gameManager = FindObjectOfType<GameManager>();
         ghostRecorder = FindObjectOfType<GhostRecorder>();
+        
+        ghostPlayRecording = FindObjectOfType<GhostPlayRecording>();
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -28,14 +32,16 @@ public class PlayerCollision : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         ghostPlayRecording = FindObjectOfType<GhostPlayRecording>();
-        
 
         ghostRecorder.isRecording = true;
+        //ghostPlayRecording.isReplayGhostMovement = true;
+
         ghostPlayRecording.ReplayMovement();
     }
 
     private void OnTriggerEnter(Collider other)
     {
         ghostRecorder.isRecording = false;
+        ghostPlayRecording.isReplayGhostMovement = false;
     }
 }

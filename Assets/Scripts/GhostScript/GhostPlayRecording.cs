@@ -29,6 +29,8 @@ public class GhostPlayRecording : MonoBehaviour
     [SerializeField]
     private GhostRecorder ghostRecorder;
 
+    public bool isReplayGhostMovement = false;
+
 
     private void Awake()
     {
@@ -75,9 +77,17 @@ public class GhostPlayRecording : MonoBehaviour
     {
         timeValue += Time.unscaledDeltaTime;
 
-         
-        GetIndex();
-        SetTransform();
+        //if (timeValue >= ghostData.timeStamp[ghostData.timeStamp.Count - 1] && isReplayGhostMovement)
+        if (timeValue >= ghostData.timeStamp[ghostData.timeStamp.Count - 1])
+        {
+            print("a");
+            ReplayMovement(); 
+        }
+        else
+        {
+            GetIndex();
+            SetTransform();
+        }
     }
 
     //linear interpolation stuff
@@ -102,6 +112,9 @@ public class GhostPlayRecording : MonoBehaviour
 
         index1 = newestTimeStamp.Count - 1;
         index2 = newestTimeStamp.Count - 1;
+
+        print(index1);
+
     }
 
     //linear interpolation lerp math shit.
@@ -119,47 +132,7 @@ public class GhostPlayRecording : MonoBehaviour
             transform.position = Vector3.Lerp(newestPosition[index1], newestPosition[index2], interpolationFactor);
             transform.rotation = Quaternion.Slerp(newestRotation[index1], newestRotation[index2], interpolationFactor);
         }
-    }
 
-
-    //Debug testing in GameManger
-    //going to try pass info from GameManager into this and see what happens. So i can get GameObject and stuff.
-    public void TESTGetIndex(GhostData ghostData)
-    {
-        for (int i = 0; i < ghostData.timeStamp.Count - 1; i++)
-        {
-            if (Mathf.Approximately(ghostData.timeStamp[i], timeValue))
-            {
-                index1 = i;
-                index2 = i;
-                return;
-            }
-            else if (ghostData.timeStamp[i] < timeValue && timeValue < ghostData.timeStamp[i + 1])
-            {
-                index1 = i;
-                index2 = i + 1;
-                return;
-            }
-        }
-
-        index1 = newestTimeStamp.Count - 1;
-        index2 = newestTimeStamp.Count - 1;
-
-    }
-
-    public void TESTSetTransform(GhostData ghostData)
-    {
-        if (index1 == index2)
-        {
-            transform.position = ghostData.position[index1];
-            transform.rotation = ghostData.rotation[index1];
-        }
-        else
-        {
-            float interpolationFactor = (timeValue - newestTimeStamp[index1]) / (ghostData.timeStamp[index2] - ghostData.timeStamp[index1]);
-
-            transform.position = Vector3.Lerp(ghostData.position[index1], ghostData.position[index2], interpolationFactor);
-            transform.rotation = Quaternion.Slerp(ghostData.rotation[index1], ghostData.rotation[index2], interpolationFactor);
-        }
+        
     }
 }

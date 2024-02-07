@@ -538,7 +538,7 @@ GameObject:
   - component: {fileID: 1266241008}
   - component: {fileID: 1266241007}
   m_Layer: 0
-  m_Name: WhiteZone - Do Not Record Player Movement
+  m_Name: WhiteZone-DoNotRecordPlayerMovementMovement
   m_TagString: DoNotRecordPlayerMovement
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
