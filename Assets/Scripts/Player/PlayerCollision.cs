@@ -8,9 +8,12 @@ public class PlayerCollision : MonoBehaviour
 
 
     private GameManager gameManager;
+    private GhostRecorder ghostRecorder;
+    private GhostPlayRecording ghostPlayRecording;
     private void Awake()
     {
-        gameManager = FindObjectOfType<GameManager>();   
+        gameManager = FindObjectOfType<GameManager>();
+        ghostRecorder = FindObjectOfType<GhostRecorder>();
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -20,5 +23,19 @@ public class PlayerCollision : MonoBehaviour
             gameManager.SpawningPlayer(gameObject);
             gameManager.SpawningClones();
         }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        ghostPlayRecording = FindObjectOfType<GhostPlayRecording>();
+        
+
+        ghostRecorder.isRecording = true;
+        ghostPlayRecording.ReplayMovement();
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        ghostRecorder.isRecording = false;
     }
 }
