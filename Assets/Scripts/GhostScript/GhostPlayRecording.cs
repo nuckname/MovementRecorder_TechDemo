@@ -12,10 +12,7 @@ public class GhostPlayRecording : MonoBehaviour
     private int index1;
     private int index2;
 
-    bool isReplay;
-
-    [SerializeField]
-    private int newestGhostIndex;
+    private bool isReplay;
 
     [SerializeField]
     public List<float> newestTimeStamp = new List<float>();
@@ -34,6 +31,11 @@ public class GhostPlayRecording : MonoBehaviour
 
     private void Awake()
     {
+        //need this as it gets ignore on first loop in PlayerCollision.cs
+        print("AWAKJE");
+        gameObject.SetActive(true);
+
+
         GameObject ghostRecorderObject = GameObject.FindWithTag("Player");
 
         ghostRecorder = ghostRecorderObject.GetComponent<GhostRecorder>();
@@ -47,48 +49,44 @@ public class GhostPlayRecording : MonoBehaviour
         
         GhostData originalGhostData = ghostRecorder.GetGhostData();
 
-        ghostData = new GhostData(originalGhostData.gameObjectGhost, originalGhostData.ghostIndex, originalGhostData.timeStamp, originalGhostData.position, originalGhostData.rotation);
+        ghostData = new GhostData(originalGhostData.timeStamp, originalGhostData.position, originalGhostData.rotation);
 
-
-        newestGhostIndex = ghostData.ghostIndex + 1;
-        print(ghostData.ghostIndex);
-
-
-        //I dont think I need this anymore. As it has been moved to GameManager.
-        
         newestPosition = new List<Vector3>(ghostData.position);
         newestRotation = new List<Quaternion>(ghostData.rotation);
         newestTimeStamp = new List<float>(ghostData.timeStamp);
+
         
     }
     public void ReplayMovement()
     {
-        //this isnt working.
+
         timeValue = 0f;
         GetIndex();
         SetTransform();
     }
 
-    /// <summary>
-    /// IDEA: have a bool condintinue where if the player leaves the white zone then it will start playing and then at the end of the list it will wait. it will
-    /// beucase the ghost has the data in the GameObject so we can use that.
-    /// </summary>
     void Update()
     {
-        timeValue += Time.unscaledDeltaTime;
+        if (isReplayGhostMovement)
+        {
+            timeValue += Time.unscaledDeltaTime;
 
-        //if (timeValue >= ghostData.timeStamp[ghostData.timeStamp.Count - 1] && isReplayGhostMovement)
-        if (timeValue >= ghostData.timeStamp[ghostData.timeStamp.Count - 1])
-        {
-            print("a");
-            ReplayMovement(); 
-        }
-        else
-        {
-            GetIndex();
-            SetTransform();
+            if (timeValue >= ghostData.timeStamp[ghostData.timeStamp.Count - 1])
+            {
+                timeValue = ghostData.timeStamp[ghostData.timeStamp.Count - 1];
+                SetTransform();
+                isReplayGhostMovement = false; 
+                
+                //gameObject.SetActive(false);
+            }
+            else
+            {
+                GetIndex();
+                SetTransform();
+            }
         }
     }
+
 
     //linear interpolation stuff
     private void GetIndex()
@@ -112,8 +110,6 @@ public class GhostPlayRecording : MonoBehaviour
 
         index1 = newestTimeStamp.Count - 1;
         index2 = newestTimeStamp.Count - 1;
-
-        print(index1);
 
     }
 

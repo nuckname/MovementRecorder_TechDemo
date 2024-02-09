@@ -62,6 +62,11 @@ public class PlayerMovement : MonoBehaviour
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
 
+        if(Input.GetKey(KeyCode.Mouse0))
+        {
+            Shoot();
+        }
+
         // when to jump
         if (Input.GetKey(jumpKey) && readyToJump && grounded)
         {
@@ -97,6 +102,11 @@ public class PlayerMovement : MonoBehaviour
             Vector3 limitedVel = flatVel.normalized * moveSpeed;
             rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
         }
+    }
+
+    private void Shoot()
+    {
+
     }
 
     private void Jump()

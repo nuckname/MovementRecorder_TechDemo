@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 6492429164189197700}
   m_Layer: 0
   m_Name: Ghost
-  m_TagString: Untagged
+  m_TagString: Ghost
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -110,7 +110,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcb142fa01d372748a50ee80c74215b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  newestGhostIndex: 0
   newestTimeStamp: []
   newestPosition: []
   newestRotation: []
   ghostRecorder: {fileID: 0}
+  isReplayGhostMovement: 0

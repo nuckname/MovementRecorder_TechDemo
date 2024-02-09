@@ -13,8 +13,6 @@ public class GhostRecorder : MonoBehaviour
 
     public bool isRecording;
 
-    int ghostCounter = -1;
-
     private void Awake()
     {
         timeValue = 0;
@@ -32,28 +30,32 @@ public class GhostRecorder : MonoBehaviour
 
     public void CreateNewGhost()
     {
-        ghostCounter += 1;
+        newGhost.ResetData();
 
-        //newGhost.ResetData();
+        newGhost = new GhostData(new List<float>(), new List<Vector3>(), new List<Quaternion>());
 
-        newGhost = new GhostData(this.gameObject, ghostCounter, new List<float>(), new List<Vector3>(), new List<Quaternion>());
-
+        timer = 0;
+        timeValue = 0;
     }
 
     void Update()
     {
-        timer += Time.unscaledDeltaTime;
-        timeValue += Time.unscaledDeltaTime;
-
-        if (isRecording && timer >= 1f / recordFrequency)
+        if(isRecording)
         {
-            newGhost.timeStamp.Add(timeValue);
-            newGhost.position.Add(transform.position);
-            newGhost.rotation.Add(transform.rotation);
+            timer += Time.unscaledDeltaTime;
+            timeValue += Time.unscaledDeltaTime;
 
-            timer = 0;
+            if (timer >= 1f / recordFrequency)
+            {
+                newGhost.timeStamp.Add(timeValue);
+                newGhost.position.Add(transform.position);
+                newGhost.rotation.Add(transform.rotation);
+
+                timer = 0;
+            }
         }
     }
+
 
     public GhostData GetGhostData()
     {

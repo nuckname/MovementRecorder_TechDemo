@@ -47,13 +47,14 @@ public class GameManager : MonoBehaviour
 
     public void SpawningClones()
     {
-        //isnt going to work as its not in update.
-        //ReplayAllOldGhostMovement();
 
         ghostRecorder = FindObjectOfType<GhostRecorder>();
 
-
+        //currentGhostData = ghostRecorder.GetGhostData();
+        
         Instantiate(ghost, spawnPoint.position, Quaternion.identity);
+        
+        //ghostRecorder.CreateNewGhost();
 
         //need to somehow remove this however it makes all the List<GhostData> null in the gameObject.
         StartCoroutine(DelayedCreation());
@@ -66,54 +67,9 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(0.01f);
 
         //bad for performances.
-        currentGhostData = ghostRecorder.GetGhostData();
-
-        //even without ShortenGhostData. it still starts at the spawnpoint pos.
-        //I dont need this
-        //shortenGhostData = ShortenGhostData(currentGhostData);
-
-        PreviousGhostRecordings.Add(currentGhostData);
-
-        //giving an error
-        //ghostRecorder.WriteGhostDataToBinary();
+        //currentGhostData = ghostRecorder.GetGhostData();
 
         ghostRecorder.CreateNewGhost();
         
-    }
-
-
-    /// <summary>
-    ///FROM GAME MANAGER CALL GHOST PLAYER SCRIPT AND PASS IN DATA TO REPLAY GHOST.
-    ///LIIKE GAME OBJECT AND POS AND STUFF.
-    /// </summary>
-    //this should be in another script. however performance :/
-    private void ReplayAllOldGhostMovement()
-    {
-        foreach (GhostData ghostData in PreviousGhostRecordings)
-        {
-            Debug.Log("Ghost Index:" + ghostData.ghostIndex);
-
-            //is this the correct Ghost Data?
-            //ghostPlayRecording.TESTSetTransform(ghostData);
-
-            for (int i = 0; i < ghostData.timeStamp.Count; i++)
-            {
-                Debug.Log("Time Stamp index:" + ghostData.ghostIndex + ": " + ghostData.timeStamp[i]);
-                //ghostData.gameObjectGhost.transform.position = ghostData.timeStamp[i];
-
-                //I should call GhostPlayRecordings.cs
-            }
-
-            for (int i = 0; i < ghostData.position.Count; i++)
-            {
-                Debug.Log("Position index:" + ghostData.ghostIndex + ": " + ghostData.position[i]);
-            }
-
-            for (int i = 0; i < ghostData.rotation.Count; i++)
-            {
-                Debug.Log("Rotation index:" + ghostData.ghostIndex + ": " + ghostData.rotation[i]);
-            }
-        }
-       
     }
 }
