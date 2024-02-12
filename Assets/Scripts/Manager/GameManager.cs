@@ -4,27 +4,32 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    private GhostData ghostData;
+
+    [Header("Spawning")]
     [SerializeField]
     private Transform spawnPoint;
 
-    [SerializeField]
-    private GameObject ghost;
-
+    [Header("Prefab")]
     [SerializeField]
     private GameObject player;
 
-    private GhostRecorder ghostRecorder;
     [SerializeField]
-    private CleaningUpList cleaningUpList;
-
-    [SerializeField]
-    private List<GhostData> PreviousGhostRecordings = new List<GhostData>();
-
+    private GameObject ghost;
+    
+    [Header("Get Scripts")]
     [SerializeField]
     private GhostPlayRecording ghostPlayRecording;
 
-    private GhostData currentGhostData;
-    private GhostData shortenGhostData;
+    private GhostRecorder ghostRecorder;
+
+    [Header("Ghost Color")]
+    [SerializeField]
+    private Material currentGhostToKill;
+
+    [SerializeField]
+    private Material doNotKillGhost;
+
 
     private void Awake()
     {
@@ -40,23 +45,14 @@ public class GameManager : MonoBehaviour
         player.transform.position = spawnPoint.transform.position;
     }
 
-    private GhostData ShortenGhostData(GhostData ghostData)
-    {
-        return cleaningUpList.RemovePositionsBeforeSpawn(ghostData);
-    }
-
     public void SpawningClones()
     {
 
         ghostRecorder = FindObjectOfType<GhostRecorder>();
 
-        //currentGhostData = ghostRecorder.GetGhostData();
-        
+        ChangeGhostColor(ghost);
         Instantiate(ghost, spawnPoint.position, Quaternion.identity);
         
-        //ghostRecorder.CreateNewGhost();
-
-        //need to somehow remove this however it makes all the List<GhostData> null in the gameObject.
         StartCoroutine(DelayedCreation());
     }
     
@@ -66,10 +62,14 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitForSeconds(0.01f);
 
-        //bad for performances.
-        //currentGhostData = ghostRecorder.GetGhostData();
-
         ghostRecorder.CreateNewGhost();
         
+    }
+    public void ChangeGhostColor(GameObject ghost)
+    {
+        Renderer ghostRenderer = ghost.GetComponent<Renderer>();
+
+        ghostRenderer.material = currentGhostToKill;
+
     }
 }

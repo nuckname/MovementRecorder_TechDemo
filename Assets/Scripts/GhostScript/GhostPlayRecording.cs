@@ -31,10 +31,8 @@ public class GhostPlayRecording : MonoBehaviour
 
     private void Awake()
     {
-        //need this as it gets ignore on first loop in PlayerCollision.cs
-        print("AWAKJE");
-        gameObject.SetActive(true);
 
+        //need this as it gets ignore on first loop in PlayerCollision.cs
 
         GameObject ghostRecorderObject = GameObject.FindWithTag("Player");
 
@@ -49,7 +47,7 @@ public class GhostPlayRecording : MonoBehaviour
         
         GhostData originalGhostData = ghostRecorder.GetGhostData();
 
-        ghostData = new GhostData(originalGhostData.timeStamp, originalGhostData.position, originalGhostData.rotation);
+        ghostData = new GhostData(this.gameObject, originalGhostData.timeStamp, originalGhostData.position, originalGhostData.rotation);
 
         newestPosition = new List<Vector3>(ghostData.position);
         newestRotation = new List<Quaternion>(ghostData.rotation);
@@ -57,9 +55,9 @@ public class GhostPlayRecording : MonoBehaviour
 
         
     }
+    
     public void ReplayMovement()
     {
-
         timeValue = 0f;
         GetIndex();
         SetTransform();
@@ -71,12 +69,14 @@ public class GhostPlayRecording : MonoBehaviour
         {
             timeValue += Time.unscaledDeltaTime;
 
+            //if ghost timestamp runs out.
             if (timeValue >= ghostData.timeStamp[ghostData.timeStamp.Count - 1])
             {
                 timeValue = ghostData.timeStamp[ghostData.timeStamp.Count - 1];
                 SetTransform();
-                isReplayGhostMovement = false; 
-                
+                isReplayGhostMovement = false;
+
+
                 //gameObject.SetActive(false);
             }
             else

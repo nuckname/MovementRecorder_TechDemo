@@ -15,8 +15,8 @@ public class GhostRecorder : MonoBehaviour
 
     private void Awake()
     {
-        timeValue = 0;
-        timer = 0;
+        //timeValue = 0;
+        //timer = 0;
 
         CreateNewGhost();
     }
@@ -24,19 +24,20 @@ public class GhostRecorder : MonoBehaviour
     private void Start()
     {
         isRecording = false;
-        timeValue = 0;
-        timer = 0;
+        //timeValue = 0;
+        //timer = 0;
     }
 
     public void CreateNewGhost()
     {
         newGhost.ResetData();
 
-        newGhost = new GhostData(new List<float>(), new List<Vector3>(), new List<Quaternion>());
+        newGhost = new GhostData(this.gameObject, new List<float>(), new List<Vector3>(), new List<Quaternion>());
 
         timer = 0;
         timeValue = 0;
     }
+
 
     void Update()
     {

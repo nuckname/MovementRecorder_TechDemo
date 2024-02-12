@@ -20,7 +20,7 @@ public class PlayerCollision : MonoBehaviour
         
         ghostPlayRecording = FindObjectOfType<GhostPlayRecording>();
     }
-
+    
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("FinishBox"))
@@ -33,6 +33,11 @@ public class PlayerCollision : MonoBehaviour
     //some of these varaibles are out of scope on this script.
     private void OnTriggerExit(Collider other)
     {
+        //SetActive?Status>ToAllGhosts();
+        //would use GhostData Gameoebjects loop through them all and set active. 
+        //would also need to uncomment gameObject.SetActive(false); in GhostPlayeRecording in Update. Might fix?
+        //not top priority for now. 
+
         ghostRecorder.isRecording = true;
 
         //not here but storing GameObjects maybe using Ghost.cs
@@ -75,4 +80,6 @@ public class PlayerCollision : MonoBehaviour
         }
 
     }
+
+
 }

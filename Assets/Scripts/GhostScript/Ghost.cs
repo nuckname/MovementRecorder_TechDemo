@@ -8,10 +8,11 @@ public class GhostData
     public List<float> timeStamp = new List<float>();
     public List<Vector3> position = new List<Vector3>();
     public List<Quaternion> rotation = new List<Quaternion>();
+    public GameObject ghostGameObject;
 
-    public GhostData(List<float> _timeStamp, List<Vector3> _position, List<Quaternion> _rotation)
+    public GhostData(GameObject _ghostGameObject, List<float> _timeStamp, List<Vector3> _position, List<Quaternion> _rotation)
     {
-
+        ghostGameObject = _ghostGameObject;
         timeStamp = new List<float>(_timeStamp);
         position = new List<Vector3>(_position);
         rotation = new List<Quaternion>(_rotation);
