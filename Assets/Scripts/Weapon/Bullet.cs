@@ -5,12 +5,19 @@ public class Bullet : MonoBehaviour
     public float speed = 10f;
     private Vector3 direction;
 
+    [SerializeField]
+    private GhostRecorder ghostRecorder;
+
+    private GhostData newGhost;
+
     private GunData gunData;
 
     void Start()
     {
-        //direction = transform.forward;
+        //ghostRecorder.CreateNewGhost();
+        ghostRecorder.CreateNewGhost();
 
+        ghostRecorder.isRecording = true;
     }
 
     void Update()
@@ -25,6 +32,10 @@ public class Bullet : MonoBehaviour
 
         //transform.position += direction * speed * Time.deltaTime;
 
+    }
+    private void OnCollisionEnter(Collision collision)
+    {
+        ghostRecorder.isRecording = false;
     }
 
     public void SetDirection(Vector3 dir)

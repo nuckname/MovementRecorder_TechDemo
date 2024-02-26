@@ -26,7 +26,6 @@ public class Gun : MonoBehaviour
     {
         PlayerShoot.shootInput += Shoot;
         PlayerShoot.reloadInput += StartReload;
-        Debug.Log("Gun script started");
 
         gunData.currentAmmo = gunData.magSize; 
     }
@@ -34,7 +33,6 @@ public class Gun : MonoBehaviour
     private void OnDisable()
     {
         gunData.reloading = false;
-        Debug.Log("Gun script disabled");
     }
 
     public void StartReload()
@@ -42,7 +40,6 @@ public class Gun : MonoBehaviour
         if (!gunData.reloading && this.gameObject.activeSelf)
         {
             StartCoroutine(Reload());
-            Debug.Log("Start reload coroutine");
         }
         else
         {
@@ -66,10 +63,7 @@ public class Gun : MonoBehaviour
     private bool CanShoot()
     {
         bool canShoot = !gunData.reloading && timeSinceLastShot > 1f / (gunData.fireRate / 60f);
-        if (!canShoot)
-        {
-            Debug.Log("Cannot shoot: reloading in progress or fire rate limit exceeded");
-        }
+
         return canShoot;
     }
 
@@ -117,13 +111,17 @@ public class Gun : MonoBehaviour
 
     private void SpawnBullet()
     {
-       
-       
         GameObject currentBullet = Instantiate(bullet, muzzle.position, Quaternion.identity); //store instantiated bullet in currentBullet
         //Rotate bullet to shoot direction
         currentBullet.transform.rotation = playerRotation.transform.rotation;
 
         //Add forces to bullet
+
+        currentBullet.GetComponent<GhostRecorder>().isRecording = true;
+
+
+        //GhostRecorder ghostRecorder = currentBullet.GetComponent<GhostRecorder>();
+        //ghostRecorder.isRecording = true;
 
         currentBullet.GetComponent<Rigidbody>().AddForce(muzzle.transform.position, ForceMode.Impulse);
         //currentBullet.GetComponent<Rigidbody>().AddForce(fpsCam.transform.up * 5, ForceMode.Impulse);

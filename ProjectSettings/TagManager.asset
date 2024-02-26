@@ -8,6 +8,8 @@ TagManager:
   - WhiteZone
   - DoNotRecordPlayerMovement
   - Ghost
+  - Bullet
+  - RecordThisGameObject
   layers:
   - Default
   - TransparentFX

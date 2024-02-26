@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &6099945388144828593
+--- !u!1 &7005634379815102234
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,27 +8,26 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 498708032881049951}
-  - component: {fileID: 2606250757431614813}
-  - component: {fileID: 4097251192559397565}
-  - component: {fileID: 2216647012028947718}
-  - component: {fileID: 6450421618175804686}
-  - component: {fileID: -7210303794947866862}
-  - component: {fileID: 4194946437280359657}
+  - component: {fileID: 3708040341501331188}
+  - component: {fileID: 1275956968544983798}
+  - component: {fileID: 955329486571662614}
+  - component: {fileID: 3124728404652956333}
+  - component: {fileID: 3346603046417742009}
+  - component: {fileID: 7559728365373842438}
   m_Layer: 0
-  m_Name: bullet
-  m_TagString: RecordThisGameObject
+  m_Name: bulletGhost
+  m_TagString: Ghost
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &498708032881049951
+--- !u!4 &3708040341501331188
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6099945388144828593}
+  m_GameObject: {fileID: 7005634379815102234}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 16.954311, y: -0.32252932, z: -11.515642}
   m_LocalScale: {x: 0.072579, y: 0.097831, z: 1}
@@ -37,21 +36,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &2606250757431614813
+--- !u!33 &1275956968544983798
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6099945388144828593}
+  m_GameObject: {fileID: 7005634379815102234}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &4097251192559397565
+--- !u!23 &955329486571662614
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6099945388144828593}
+  m_GameObject: {fileID: 7005634379815102234}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -87,40 +86,26 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &2216647012028947718
+--- !u!65 &3124728404652956333
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6099945388144828593}
+  m_GameObject: {fileID: 7005634379815102234}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &6450421618175804686
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6099945388144828593}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e8b172db59c6c64dbe6bfab1d1d5a24, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 15
-  ghostRecorder: {fileID: 4194946437280359657}
---- !u!54 &-7210303794947866862
+--- !u!54 &3346603046417742009
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6099945388144828593}
+  m_GameObject: {fileID: 7005634379815102234}
   serializedVersion: 2
   m_Mass: 1
   m_Drag: 1
@@ -130,22 +115,23 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &4194946437280359657
+--- !u!114 &7559728365373842438
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6099945388144828593}
+  m_GameObject: {fileID: 7005634379815102234}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 05d2353496a68dc4fabf0c91622caac3, type: 3}
+  m_Script: {fileID: 11500000, guid: bcb142fa01d372748a50ee80c74215b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  newGhost:
+  ghostData:
     timeStamp: []
     position: []
     rotation: []
     ghostGameObject: {fileID: 0}
-    frequencyRecording: 30
-  isRecording: 0
+    frequencyRecording: 0
+  isReplayGhostMovement: 0
+  ghostRecorder: {fileID: 0}

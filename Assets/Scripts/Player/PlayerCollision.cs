@@ -4,21 +4,20 @@ using UnityEngine;
 
 public class PlayerCollision : MonoBehaviour
 {
-    public static int STATIC_INDEX_COUNTER_FOR_PLAYER_SPAWNS;
-
-
     private GameManager gameManager;
     private GhostRecorder ghostRecorder;
     private GhostPlayRecording ghostPlayRecording;
+    private GhostReplayManager ghostReplayManager;
 
     bool ignoreFirstLoopExit = true;
     bool ignoreFirstLoopEnter = true;
     private void Awake()
     {
-        gameManager = FindObjectOfType<GameManager>();
+        //nice
         ghostRecorder = FindObjectOfType<GhostRecorder>();
-        
         ghostPlayRecording = FindObjectOfType<GhostPlayRecording>();
+        ghostReplayManager = FindObjectOfType<GhostReplayManager>();
+        gameManager = FindObjectOfType<GameManager>();
     }
     
     private void OnCollisionEnter(Collision collision)
@@ -26,37 +25,22 @@ public class PlayerCollision : MonoBehaviour
         if (collision.gameObject.CompareTag("FinishBox"))
         {
             gameManager.SpawningPlayer(gameObject);
-            gameManager.SpawningClones();
+            ghostReplayManager.SpawningClones();
+
+            //how do i pass in the movement data from here?
+            //is this getting the right ghost Recorder
+            ghostRecorder.LoadDataToFile();
+            print("end of movement");
         }
     }
 
-    //some of these varaibles are out of scope on this script.
     private void OnTriggerExit(Collider other)
     {
-        //SetActive?Status>ToAllGhosts();
-        //would use GhostData Gameoebjects loop through them all and set active. 
-        //would also need to uncomment gameObject.SetActive(false); in GhostPlayeRecording in Update. Might fix?
-        //not top priority for now. 
-
         ghostRecorder.isRecording = true;
 
-        //not here but storing GameObjects maybe using Ghost.cs
-        //a lot of Get / Find stuff will be bad for scaling.
         if (!ignoreFirstLoopExit)
         {
-            //this script isnt getting anything as they arent set as active. so it only returns like 1 varaible.
-            GameObject[] ghostObjects = GameObject.FindGameObjectsWithTag("Ghost");
-
-            foreach (GameObject ghostObject in ghostObjects)
-            {
-                //ghostObject.SetActive(true);
-                print(ghostObject);
-
-                GhostPlayRecording ghostRecording = ghostObject.GetComponent<GhostPlayRecording>();
-
-                ghostRecording.isReplayGhostMovement = true;
-                ghostRecording.ReplayMovement();
-            }
+            ghostReplayManager.ReplayAllGhostMovement();
         }
         else
         {
@@ -80,6 +64,4 @@ public class PlayerCollision : MonoBehaviour
         }
 
     }
-
-
 }

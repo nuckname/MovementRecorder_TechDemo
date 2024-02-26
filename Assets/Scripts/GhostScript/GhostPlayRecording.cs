@@ -4,58 +4,67 @@ using UnityEngine;
 
 public class GhostPlayRecording : MonoBehaviour
 {
+    //READ IN FROM FILE.
+    [SerializeField]
     private GhostData ghostData;
+    
 
     private float timeValue;
 
     //linear interpolation variables
     private int index1;
     private int index2;
-
     private bool isReplay;
 
-    [SerializeField]
-    public List<float> newestTimeStamp = new List<float>();
-
-    [SerializeField]
-    private List<Vector3> newestPosition = new List<Vector3>();
-
-    [SerializeField]
-    private List<Quaternion> newestRotation = new List<Quaternion>();
-
-    [SerializeField]
-    private GhostRecorder ghostRecorder;
+    private List<GameObject> ghostRecorderObjects = new List<GameObject>();
+    
+    private int currentIndex = 0;
 
     public bool isReplayGhostMovement = false;
 
-
+    [SerializeField]
+    private GhostRecorder ghostRecorder;
+    
     private void Awake()
     {
+        //I think data is being over written.
 
-        //need this as it gets ignore on first loop in PlayerCollision.cs
+        //I dont want an array becuase it store it on each gameobjects. So each ghost holds all the arrays data. 
 
-        GameObject ghostRecorderObject = GameObject.FindWithTag("Player");
+        //ideally this. but doesnt work as there are multiple types of GhostRecorder.
+        //(gives error)
 
-        ghostRecorder = ghostRecorderObject.GetComponent<GhostRecorder>();
-        
+
+
+        //GameObject ghostRecorderObject = GameObject.FindWithTag("Player");
+        //ghostRecorder = ghostRecorderObject.GetComponent<GhostRecorder>();
+
+
+        //ghostRecorder = FindObjectOfType<GhostRecorder>();
+
+        /*
+        GameObject[] foundObjects = GameObject.FindGameObjectsWithTag("RecordThisGameObject");
+        foreach (GameObject obj in foundObjects)
+        {
+            ghostRecorderObjects.Add(obj);
+        }
+        */
+
+        //GetNextGhostData();
     }
 
     private void Start()
     {
-        timeValue = 0;
         isReplay = true;
-        
-        GhostData originalGhostData = ghostRecorder.GetGhostData();
 
-        ghostData = new GhostData(this.gameObject, originalGhostData.timeStamp, originalGhostData.position, originalGhostData.rotation);
+        FileManager fileManager = FindObjectOfType<FileManager>();
+        fileManager.LoadSingleGhostData();
 
-        newestPosition = new List<Vector3>(ghostData.position);
-        newestRotation = new List<Quaternion>(ghostData.rotation);
-        newestTimeStamp = new List<float>(ghostData.timeStamp);
 
-        
+
+        //GhostData originalGhostData = ghostRecorder.GetGhostData();
     }
-    
+
     public void ReplayMovement()
     {
         timeValue = 0f;
@@ -68,7 +77,7 @@ public class GhostPlayRecording : MonoBehaviour
         if (isReplayGhostMovement)
         {
             timeValue += Time.unscaledDeltaTime;
-
+            
             //if ghost timestamp runs out.
             if (timeValue >= ghostData.timeStamp[ghostData.timeStamp.Count - 1])
             {
@@ -76,8 +85,6 @@ public class GhostPlayRecording : MonoBehaviour
                 SetTransform();
                 isReplayGhostMovement = false;
 
-
-                //gameObject.SetActive(false);
             }
             else
             {
@@ -86,21 +93,29 @@ public class GhostPlayRecording : MonoBehaviour
             }
         }
     }
+    /*
+    private void GetNextGhostData()
+    {
+        currentIndex++;
+        print(currentIndex);
+        ghostData = ghostRecorderObjects[currentIndex].GetComponent<GhostRecorder>().GetGhostData();
+        ghostData = new GhostData(70, this.gameObject, ghostData.timeStamp, ghostData.position, ghostData.rotation);
 
-
-    //linear interpolation stuff
+        //currentIndex++;
+        currentIndex = (currentIndex + 1);
+    }
+    */
     private void GetIndex()
     {
-        for (int i = 0; i < newestTimeStamp.Count - 2; i++)
+        for (int i = 0; i < ghostData.timeStamp.Count - 2; i++)
         {
-            if (newestTimeStamp[i] == timeValue)
+            if (ghostData.timeStamp[i] == timeValue)
             {
                 index1 = i;
                 index2 = i;
                 return;
-
             }
-            else if (newestTimeStamp[i] < timeValue && timeValue < newestTimeStamp[i + 1])
+            else if (ghostData.timeStamp[i] < timeValue & timeValue < ghostData.timeStamp[i + 1])
             {
                 index1 = i;
                 index2 = i + 1;
@@ -108,27 +123,23 @@ public class GhostPlayRecording : MonoBehaviour
             }
         }
 
-        index1 = newestTimeStamp.Count - 1;
-        index2 = newestTimeStamp.Count - 1;
-
+        index1 = ghostData.timeStamp.Count - 1;
+        index2 = ghostData.timeStamp.Count - 1;
     }
 
-    //linear interpolation lerp math shit.
     private void SetTransform()
     {
         if (index1 == index2)
         {
-            transform.position = newestPosition[index1];
-            transform.rotation = newestRotation[index1];
+            this.transform.position = ghostData.position[index1];
+            this.transform.rotation = ghostData.rotation[index1];
         }
         else
         {
-            float interpolationFactor = (timeValue - newestTimeStamp[index1]) / (newestTimeStamp[index2] - newestTimeStamp[index1]);
+            float interpolationFactor = (timeValue - ghostData.timeStamp[index1]) / (ghostData.timeStamp[index2] - ghostData.timeStamp[index1]);
 
-            transform.position = Vector3.Lerp(newestPosition[index1], newestPosition[index2], interpolationFactor);
-            transform.rotation = Quaternion.Slerp(newestRotation[index1], newestRotation[index2], interpolationFactor);
+            this.transform.position = Vector3.Lerp(ghostData.position[index1], ghostData.position[index2], interpolationFactor);
+            this.transform.rotation = Quaternion.Slerp(ghostData.rotation[index1], ghostData.rotation[index2], interpolationFactor);
         }
-
-        
     }
 }
